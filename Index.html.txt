@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RawHub</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #1a202c;
+            color: #cbd5e0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 600px;
+            width: 90%;
+            background-color: #2d3748;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+        }
+        .input-group textarea {
+            font-family: 'Roboto', sans-serif;
+            width: 100%;
+            height: 200px;
+            padding: 8px;
+            border: 1px solid #718096;
+            border-radius: 5px;
+            margin-top: 5px;
+            background-color: #4a5568;
+            color: #cbd5e0;
+        }
+        .button {
+            font-family: 'Roboto', sans-serif;
+            padding: 10px 20px;
+            background-color: #2b6cb0;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .button:hover {
+            background-color: #2c5282;
+        }
+        .error {
+            color: #f56565;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .result {
+            font-family: 'Roboto', sans-serif;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        a {
+            font-family: 'Roboto', sans-serif;
+            color: #cbd5e0;
+        }
+        pre {
+            font-family: 'Roboto', sans-serif;
+            white-space: pre-wrap;
+            padding-left: 50px;
+            background-color: #2d3748;
+            margin: 10px 0;
+            border-radius: 5px;
+            position: relative;
+        }
+        pre::before {
+            content: attr(data-line);
+            display: block;
+            position: absolute;
+            color: #9ae6b4;
+            left: 0;
+            top: 0;
+            width: 30px;
+            text-align: right;
+        }
+        .credit {
+            font-family: 'Roboto', sans-serif;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #cbd5e0;
+        }
+        .disclaimer {
+            font-family: 'Roboto', sans-serif;
+            font-size: 12px;
+            color: #a0aec0;
+            margin-top: 10px;
+        }
+        .disclaimer a {
+            font-family: 'Roboto', sans-serif;
+            color: #a0aec0;
+            text-decoration: underline;
+        }
+        .download-button {
+            font-family: 'Roboto', sans-serif;
+            padding: 10px;
+            background-color: #2b6cb0;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1;
+        }
+        .download-button:hover {
+            background-color: #2c5282;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>RawHub</h1>
+        <button id="generateButton" class="button">Get Raw</button>
+        <button id="downloadButton" class="download-button">Download Code</button>
+        <p>Hello! Welcome to RawHub</p>
+        <p>Please enter your code below and press the "Get Raw" or "Download Code" button.</p>
+        <div class="input-group">
+            <textarea id="codeInput"></textarea>
+        </div>
+        <p class="error" id="errorMessage"></p>
+        <p class="result" id="result"></p>
+        <div class="credit">Made by: messilt2</div>
+        <div class="disclaimer">
+            This might have bugs, please avoid entering your code directly. Use an external code editor <a href="https://www.mycompiler.io/" target="_blank">mycompiler.io</a>
+        </div>
+    </div>
+
+    <script>
+        const generateButton = document.getElementById("generateButton");
+        const downloadButton = document.getElementById("downloadButton");
+        const errorMessage = document.getElementById("errorMessage");
+        const resultText = document.getElementById("result");
+
+        generateButton.addEventListener("click", function() {
+            const codeInput = document.getElementById("codeInput");
+            const code = codeInput.value.trim();
+            if (code) {
+                const htmlContent = `
+                    <!DOCTYPE html>
+                    <html lang="en">
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <title>Generated RawHub</title>
+                    </head>
+                    <body>
+                        <pre data-line="1">${code}</pre>
+                    </body>
+                    </html>
+                `;
+                const blob = new Blob([htmlContent], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+
+                const generatedPage = window.open(url, '_blank');
+                if (!generatedPage) {
+                    resultText.textContent = "Please allow pop-ups to view the generated RawHub.";
+                } else {
+                    resultText.textContent = "";
+                }
+                errorMessage.textContent = "";
+            } else {
+                errorMessage.textContent = "Please put your code in the code editor.";
+            }
+        });
+
+        downloadButton.addEventListener("click", function() {
+            const codeInput = document.getElementById("codeInput");
+            const code = codeInput.value.trim();
+            if (code) {
+                const blob = new Blob([code], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'website_code.txt';
+                a.click();
+                errorMessage.textContent = "";
+            } else {
+                errorMessage.textContent = "Please put your code in the code editor.";
+            }
+        });
+    </script>
+</body>
+</html>
